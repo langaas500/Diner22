@@ -12,10 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// UPDATED: premium polish — metadata for foodtruck/burger
 export const metadata: Metadata = {
-  title: "Slitu Pizza | Pizza i Slitu siden 2016",
-  description: "Slitu Pizza Service - Familiedrevet pizzarestaurant i Slitu. Ferske råvarer, hjemmelaget deig og dressinger. Bestill på 69 89 46 46.",
-  keywords: "pizza, slitu, eidsberg, bestilling, takeaway, levering",
+  title: "Diner 22 | Foodtruck i Mysen — Burgere, Fries & Snacks",
+  description:
+    "Diner 22 — retro foodtruck i Mysen. Saftige burgere, sprø fries og gode dips. Ring 920 60 569 for bestilling.",
+  keywords:
+    "diner 22, foodtruck, mysen, burger, bestilling, takeaway, fries, snacks",
 };
 
 export default function RootLayout({

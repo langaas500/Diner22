@@ -1,314 +1,340 @@
-// src/app/page.tsx
-"use client";
-
+// UPDATED: premium polish — typography, CTA system, trust strip, featured card, micro-interactions
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { menuItems } from "../data/menu";
+
+const phoneDisplay = "920 60 569";
+const phoneHref = "tel:92060569";
+
+/* Badge mapping by item id */
+const badgeMap: Record<number, { label: string; variant: string }> = {
+  1: { label: "Bestselger", variant: "hot" },
+  3: { label: "Sterk", variant: "spicy" },
+  20: { label: "Populær", variant: "default" },
+};
+
+function getFromPrice(item: { price?: number; prices?: { value: number }[] }) {
+  if (item.prices && item.prices.length > 0) {
+    return Math.min(...item.prices.map((p) => p.value));
+  }
+  return item.price ?? null;
+}
+
+function formatNok(n: number) {
+  return `${n} kr`;
+}
 
 export default function HomePage() {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const popular = menuItems.filter((m) => m.popular);
+  const highlights = (popular.length >= 3 ? popular : menuItems).slice(0, 6);
+  const featured = highlights[0];
+  const rest = highlights.slice(1);
+
+  const featuredPrice = featured ? getFromPrice(featured) : null;
+  const featuredBadge = featured ? badgeMap[featured.id] : undefined;
 
   return (
-    <div className="min-h-screen bg-[#F6F2EB] text-[#2F2A25]">
-      {/* Subtle paper texture vibe */}
-      <div className="pointer-events-none fixed inset-0 opacity-[0.08] mix-blend-multiply">
-        <div className="h-full w-full bg-[radial-gradient(circle_at_20%_10%,#000_0,transparent_40%),radial-gradient(circle_at_80%_0%,#000_0,transparent_45%),radial-gradient(circle_at_80%_90%,#000_0,transparent_45%)]" />
-      </div>
+    <div>
+      {/* HEADER */}
+      <header className="neonTop">
+        <div className="container">
+          <div className="topRow">
+            <Link href="/" className="brandLogo" aria-label="Diner 22 hjem">
+              <img className="brandLogoImg" src="/logo.png" alt="Diner 22" />
+            </Link>
 
-      {/* Top bar */}
-      <header className="relative z-10">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex h-12 items-center justify-between gap-3 text-sm">
-            <div className="flex items-center gap-3 text-[#5C5248]">
-              <span className="inline-flex items-center gap-2">
-                <span className="text-base leading-none">📍</span>
-                <span className="hidden sm:inline text-sm">Peter Slotsviksvei 2, Slitu</span>
-                <span className="sm:hidden text-sm">Slitu</span>
-              </span>
-
-              <span className="hidden md:inline text-[#6B4F3A]">·</span>
-
-              <span className="hidden md:inline-flex items-center gap-2 text-sm">
-                <span className="text-base leading-none">👨‍👩‍👧</span>
-                <span>Familiedrevet siden 2016</span>
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <a
-                href="tel:+4769894646"
-                className="inline-flex items-center gap-2 rounded-full border border-[#6B4F3A]/20 bg-white/65 px-3 py-1.5 text-[#2F2A25] shadow-sm backdrop-blur hover:bg-white"
-                aria-label="Ring Slitu Pizza"
-              >
-                <span className="text-base leading-none">📞</span>
-                <span className="font-semibold text-[#D9A441]">69 89 46 46</span>
-              </a>
-
-              <button
-                type="button"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#6B4F3A]/20 bg-white/65 shadow-sm backdrop-blur hover:bg-white md:hidden"
-                aria-label="Åpne meny"
-                aria-expanded={mobileNavOpen}
-                onClick={() => setMobileNavOpen((v) => !v)}
-              >
-                <span className="text-lg leading-none">≡</span>
-              </button>
-            </div>
+            <nav className="navPill" aria-label="Navigasjon">
+              <Link href="/">Hjem</Link>
+              <span className="sep">›</span>
+              <Link href="/meny">Meny</Link>
+              <span className="sep">›</span>
+              <Link href="/kontakt">Kontakt</Link>
+            </nav>
           </div>
-
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center justify-end gap-6 border-t border-[#6B4F3A]/20 py-2 text-sm text-[#5C5248]">
-            <Link className="hover:text-[#2F2A25]" href="/meny">
-              Meny
-            </Link>
-            <Link className="hover:text-[#2F2A25]" href="/kontakt">
-              Kontakt
-            </Link>
-          </nav>
-
-          {/* Mobile nav panel */}
-          {mobileNavOpen ? (
-            <div className="md:hidden">
-              <div className="rounded-2xl border border-[#6B4F3A]/20 bg-white/75 p-2 shadow-sm backdrop-blur">
-                <div className="grid gap-1 text-sm">
-                  <Link
-                    className="rounded-xl px-3 py-2 hover:bg-[#F6F2EB]"
-                    href="/meny"
-                    onClick={() => setMobileNavOpen(false)}
-                  >
-                    Meny
-                  </Link>
-                  <Link
-                    className="rounded-xl px-3 py-2 hover:bg-[#F6F2EB]"
-                    href="/kontakt"
-                    onClick={() => setMobileNavOpen(false)}
-                  >
-                    Kontakt
-                  </Link>
-                </div>
-              </div>
-              <div className="h-2" />
-            </div>
-          ) : null}
         </div>
       </header>
 
-      {/* Main */}
-      <main className="relative z-10">
+      <main>
         {/* HERO */}
-        <section className="mx-auto max-w-6xl px-4 pt-3 md:pt-4">
-          <div className="overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 shadow-sm backdrop-blur">
-            <div className="grid items-stretch md:grid-cols-2">
-              {/* Left */}
-              <div className="relative p-5 md:p-8">
-                {/* tiny color hairline (yellow/red) */}
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="h-1 w-12 rounded-full bg-[#D9A441]" />
-                  <div className="h-1 w-12 rounded-full bg-[#6B4F3A]" />
-                </div>
+        <section className="hero">
+          <div className="container">
+            <div className="heroGrid">
+              <div className="card heroLeft">
+                <p className="heroKicker">Foodtruck · Mysen</p>
 
-                {/* Logo placeholder - legg inn logo.png i public/ */}
-                <div className="mb-4">
-                  <h2 className="text-3xl font-bold text-[#D9A441]">Slitu Pizza</h2>
-                </div>
-
-                <h1 className="text-2xl font-semibold leading-tight md:text-3xl">
-                  Ekte pizza med ferske råvarer <br className="hidden md:block" />
-                  – laget i Slitu siden 2016
+                <h1 className="heroTitle">
+                  Velkommen til <span className="neonWord">Diner 22</span>
                 </h1>
 
-                <p className="mt-3 text-sm text-[#5C5248]">
-                  Familiedrevet pizzarestaurant med hjemmelaget deig hver morgen
-                  og dressinger laget fra bunnen av.
+                <p className="heroLead">
+                  Saftige burgere, sprø fries og gode dips — laget med
+                  kjærlighet fra vår foodtruck i Mysen.
                 </p>
 
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-[#5C5248]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="text-base leading-none">📍</span>
-                    Slitu, Eidsberg
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="text-base leading-none">👨‍👩‍👧</span>
-                    Familievennlig
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="text-base leading-none">🍕</span>
-                    33 pizzaer
-                  </span>
-                </div>
-
-                <div className="mt-5">
-                  <Link
-                    href="/meny"
-                    className="inline-flex items-center justify-center rounded-xl bg-[#D9A441] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#C8962E]"
-                  >
+                <div className="ctaRow">
+                  <a className="btnPrimary" href={phoneHref}>
+                    Bestill på telefon <span aria-hidden="true">›</span>
+                  </a>
+                  <Link className="btnGhost" href="/meny">
                     Se meny
                   </Link>
                 </div>
-
-                <div className="mt-4 text-xs text-[#5C5248]">
-                  <span className="font-semibold text-[#2F2A25]">Åpent i dag:</span>{" "}
-                  Se åpningstider nedenfor
-                </div>
               </div>
 
-              {/* Right image */}
-              <div className="relative min-h-[200px] md:min-h-[380px]">
+              <div className="heroRight card" aria-label="Diner 22 burger og fries">
                 <Image
-                  src="/hero.png"
-                  alt="Slitu Pizza stemning"
+                  src="/bilde1.png"
+                  alt=""
                   fill
-                  className="object-cover"
                   priority
+                  className="heroImg"
                 />
+                <div className="heroGrain" aria-hidden="true" />
+                <div className="heroVignette" aria-hidden="true" />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Menu Preview */}
-        <section className="mx-auto max-w-6xl px-4 pt-4">
-          <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
-            {/* Pizza */}
-            <Link
-              href="/meny"
-              className="group overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-4 shadow-sm backdrop-blur hover:bg-white/70 transition"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">🍕</span>
-                <div>
-                  <h3 className="font-semibold text-[#2F2A25]">Pizza</h3>
-                  <p className="text-xs text-[#5C5248]">33 varianter</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Valgfri */}
-            <Link
-              href="/meny"
-              className="group overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-4 shadow-sm backdrop-blur hover:bg-white/70 transition"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">✨</span>
-                <div>
-                  <h3 className="font-semibold text-[#2F2A25]">Valgfri</h3>
-                  <p className="text-xs text-[#5C5248]">Lag din egen</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Glutenfri */}
-            <Link
-              href="/meny"
-              className="group overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-4 shadow-sm backdrop-blur hover:bg-white/70 transition"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">🌾</span>
-                <div>
-                  <h3 className="font-semibold text-[#2F2A25]">Glutenfri</h3>
-                  <p className="text-xs text-[#5C5248]">Tilgjengelig</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Tillegg */}
-            <Link
-              href="/meny"
-              className="group overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-4 shadow-sm backdrop-blur hover:bg-white/70 transition"
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">➕</span>
-                <div>
-                  <h3 className="font-semibold text-[#2F2A25]">Tillegg</h3>
-                  <p className="text-xs text-[#5C5248]">Ekstra ost, kjøtt</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* Om oss & Bestilling */}
-        <section className="mx-auto max-w-6xl px-4 pt-4">
-          <div className="grid gap-3 md:grid-cols-2">
-            {/* Om oss */}
-            <div className="overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-5 shadow-sm backdrop-blur">
-              <h3 className="text-lg font-semibold text-[#2F2A25] mb-2">
-                <span className="mr-2">👨‍🍳</span>Om Slitu Pizza
-              </h3>
-              <p className="text-sm text-[#5C5248]">
-                Slitu Pizza Service er en familiedrevet restaurant i Slitu, Eidsberg kommune.
-                Vi har vært i drift siden 2016, og er stolte av å tilby god mat og god service
-                til en rimelig pris. Deigen lages fersk hver morgen!
-              </p>
-            </div>
-
-            {/* Bestill */}
-            <div className="overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 p-5 shadow-sm backdrop-blur">
-              <h3 className="text-lg font-semibold text-[#2F2A25] mb-2">
-                <span className="mr-2">📞</span>Bestill på telefon
-              </h3>
-              <p className="text-sm text-[#5C5248] mb-4">
-                Ring oss for å bestille pizza til henting.<br />
-                <a href="tel:+4769894646" className="font-semibold text-[#D9A441] hover:underline">
-                  69 89 46 46
-                </a>
-              </p>
-              <a
-                href="https://slitupizza.no"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center rounded-xl border border-[#6B4F3A]/20 bg-white/70 px-4 py-2 text-sm font-semibold text-[#2F2A25] shadow-sm hover:bg-white"
-              >
-                Besøk slitupizza.no
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* Åpningstider & Adresse */}
-        <section className="mx-auto max-w-6xl px-4 py-4">
-          <div className="overflow-hidden rounded-lg border border-[#6B4F3A]/15 bg-white/55 shadow-sm backdrop-blur">
-            <div className="grid gap-3 p-4 md:grid-cols-3 md:items-center">
-              <div className="flex items-center gap-3 text-[#2F2A25]">
-                <span className="text-lg leading-none">🕒</span>
-                <div>
-                  <div className="text-xs text-[#5C5248]">Åpningstider</div>
-                  <div className="text-sm font-semibold">
-                    Tir-Tor: 15-21 · Fre: 14-21<br />
-                    Lør-Søn: 13-21
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 text-[#2F2A25]">
-                <span className="text-lg leading-none">📍</span>
-                <div>
-                  <div className="text-xs text-[#5C5248]">Adresse</div>
-                  <div className="text-sm font-semibold">Peter Slotsviksvei 2, 1859 Slitu</div>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 md:justify-end">
-                <a
-                  href="https://maps.google.com/?q=Peter%20Slotsviksvei%202%2C%201859%20Slitu"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl border border-[#6B4F3A]/20 bg-white/70 px-4 py-2 text-xs font-semibold text-[#2F2A25] shadow-sm hover:bg-white"
+        {/* TRUST STRIP */}
+        <section className="trustStrip" aria-label="Hvorfor velge oss">
+          <div className="container">
+            <div className="trustRow">
+              <div className="trustItem">
+                <svg
+                  className="trustIcon trustIconStar"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  width="18"
+                  height="18"
                 >
-                  Vis kart
-                </a>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span>
+                  <strong>4,7</strong> på Google
+                </span>
+              </div>
+
+              <div className="trustDivider" aria-hidden="true" />
+
+              <div className="trustItem">
+                <svg
+                  className="trustIcon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  width="18"
+                  height="18"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>
+                  Klar på <strong>15–25 min</strong>
+                </span>
+              </div>
+
+              <div className="trustDivider" aria-hidden="true" />
+
+              <div className="trustItem">
+                <svg
+                  className="trustIcon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  width="18"
+                  height="18"
+                >
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <span>
+                  Takeaway i <strong>Mysen</strong>
+                </span>
               </div>
             </div>
           </div>
-
-          <footer className="mt-3 text-center text-xs text-[#5C5248]">
-            © {new Date().getFullYear()} Slitu Pizza ·{" "}
-            <Link className="hover:underline" href="/meny">
-              Se meny
-            </Link>
-          </footer>
         </section>
+
+        {/* POPULAR */}
+        <section className="section" id="populaert">
+          <div className="container">
+            <div className="sectionHeader">
+              <h2 className="sectionTitle">Populært akkurat nå</h2>
+              <Link className="btnGhost btnSmall" href="/meny">
+                Se full meny
+              </Link>
+            </div>
+
+            {/* Featured item */}
+            {featured && (
+              <div className="featuredCard">
+                <div className="featuredContent">
+                  {featuredBadge && (
+                    <span className={`badge badge-${featuredBadge.variant}`}>
+                      {featuredBadge.label}
+                    </span>
+                  )}
+                  <h3 className="featuredName">{featured.name}</h3>
+                  {featured.description && (
+                    <p className="featuredDesc">{featured.description}</p>
+                  )}
+                  {featured.prices && featured.prices.length > 0 && (
+                    <div className="featuredVariants">
+                      {featured.prices.map((p, i) => (
+                        <span key={p.label}>
+                          {p.label}:{" "}
+                          <strong>{p.value} kr</strong>
+                          {i < featured.prices!.length - 1 && " · "}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="featuredPriceBlock">
+                  {featuredPrice !== null && (
+                    <>
+                      <span className="featuredFrom">fra</span>
+                      <span className="featuredPrice neonWord">
+                        {formatNok(featuredPrice)}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Rest of highlights */}
+            <div className="highlightGrid">
+              {rest.map((item) => {
+                const fromPrice = getFromPrice(item);
+                const badge = badgeMap[item.id];
+
+                return (
+                  <div key={item.id} className="card highlightCard">
+                    <div className="highlightTop">
+                      <div>
+                        {badge && (
+                          <span className={`badge badge-${badge.variant}`}>
+                            {badge.label}
+                          </span>
+                        )}
+                        <div className="highlightName">{item.name}</div>
+                      </div>
+                      {fromPrice !== null && (
+                        <div className="highlightPrice">
+                          fra{" "}
+                          <span className="neonWord">
+                            {formatNok(fromPrice)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {item.description ? (
+                      <div className="highlightDesc">{item.description}</div>
+                    ) : (
+                      <div className="highlightDesc">
+                        Se full meny for detaljer.
+                      </div>
+                    )}
+
+                    {item.prices && item.prices.length > 0 && (
+                      <div className="highlightMeta">
+                        {item.prices.map((p) => p.label).join(" · ")}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="rightCtaRow">
+              <Link className="btnPrimary" href="/meny">
+                Se hele menyen <span aria-hidden="true">›</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* GALLERY — bilde2 + foodtruck side by side */}
+        <section className="section" id="galleri">
+          <div className="container">
+            <div className="galleryDuo">
+              <div className="showcaseWrap">
+                <Image
+                  src="/bilde2.png"
+                  alt="Crispy chicken og sides fra Diner 22"
+                  width={960}
+                  height={540}
+                  className="showcaseImg"
+                />
+                <div className="showcaseOverlay" aria-hidden="true" />
+                <div className="showcaseText">
+                  <h2 className="showcaseHeading">Crispy Chicken &amp; Sides</h2>
+                  <p className="showcaseSub">
+                    Sprøtt, raskt og perfekt til takeaway
+                  </p>
+                </div>
+              </div>
+
+              <div className="showcaseWrap">
+                <Image
+                  src="/truck.jpg"
+                  alt="Diner 22 foodtruck i Mysen"
+                  width={960}
+                  height={1200}
+                  className="showcaseImg"
+                />
+                <div className="showcaseOverlay" aria-hidden="true" />
+                <div className="showcaseText">
+                  <h2 className="showcaseHeading">Vår foodtruck</h2>
+                  <p className="showcaseSub">Raveien 1, Mysen</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="footerBar" id="kontakt">
+          <div className="container">
+            <div className="footerRow">
+              <div>
+                <strong>Diner 22</strong> · Mysen ·{" "}
+                <a href={phoneHref} className="footerPhone">
+                  {phoneDisplay}
+                </a>
+              </div>
+
+              <div className="footerLinks">
+                <Link href="/meny">Meny</Link>
+                <a href="#populaert">Populært</a>
+                <Link href="/kontakt">Kontakt</Link>
+              </div>
+            </div>
+          </div>
+        </footer>
       </main>
+
+      {/* MOBILE STICKY CTA */}
+      <div className="mobileCta" aria-label="Bestilling">
+        <a className="btnPrimary mobilePrimaryBtn" href={phoneHref}>
+          Bestill på telefon
+        </a>
+        <Link className="mobileSecondaryBtn" href="/meny">
+          Se meny
+        </Link>
+      </div>
     </div>
   );
 }
