@@ -108,7 +108,7 @@ const MENU_DATA = {
   }
 };
 
-const NeonText = ({ children, color = "#FF1493", size = "2rem", className = "" }) => (
+const NeonText = ({ children, color = "#FF1493", size = "2rem", className = "" }: { children: React.ReactNode; color?: string; size?: string; className?: string }) => (
   <span
     className={className}
     style={{
@@ -123,7 +123,7 @@ const NeonText = ({ children, color = "#FF1493", size = "2rem", className = "" }
   </span>
 );
 
-const BurgerStack = ({ burger, isExpanded, onClick }) => {
+const BurgerStack = ({ burger, isExpanded, onClick }: { burger: { id: number; name: string; allergens: string; layers: string[]; layerColors: string[]; prices: { bare: number; medFrites: number }; weight?: string }; isExpanded: boolean; onClick: () => void }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -356,7 +356,7 @@ const BurgerStack = ({ burger, isExpanded, onClick }) => {
   );
 };
 
-const CategoryTab = ({ label, active, onClick, color }) => (
+const CategoryTab = ({ label, active, onClick, color }: { label: string; active: boolean; onClick: () => void; color: string }) => (
   <button
     onClick={onClick}
     style={{
@@ -381,7 +381,7 @@ const CategoryTab = ({ label, active, onClick, color }) => (
   </button>
 );
 
-const MenuItem = ({ name, desc, price, allergens, options, children }) => (
+const MenuItem = ({ name, desc, price, allergens, options, children }: { name: string; desc?: string; price?: number | null; allergens?: string; options?: { label: string; price: number | null }[]; children?: React.ReactNode }) => (
   <div style={{
     padding: "16px 20px",
     borderRadius: "12px",
@@ -457,7 +457,7 @@ const MenuItem = ({ name, desc, price, allergens, options, children }) => (
   </div>
 );
 
-const DrinkCard = ({ name, bgColor, textColor, accentColor, logo }) => {
+const DrinkCard = ({ name, bgColor, textColor, accentColor, logo }: { name: string; bgColor: string; textColor: string; accentColor: string; logo: React.ReactNode }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -530,10 +530,10 @@ const DrinkCard = ({ name, bgColor, textColor, accentColor, logo }) => {
 };
 
 const BuildYourOwnSection = () => {
-  const [selectedToppings, setSelectedToppings] = useState([]);
+  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
   const data = MENU_DATA.buildYourOwn;
 
-  const toggleTopping = (t) => {
+  const toggleTopping = (t: string) => {
     setSelectedToppings(prev =>
       prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
     );
