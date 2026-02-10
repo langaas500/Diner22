@@ -28,10 +28,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
-        width: 800,
-        height: 800,
-        alt: "Diner 22 logo",
+        url: "/bilde1.png",
+        width: 1200,
+        height: 630,
+        alt: "Diner 22 — burger og fries",
       },
     ],
   },
